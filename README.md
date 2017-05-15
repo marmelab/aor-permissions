@@ -212,7 +212,10 @@ const Menu = ({ onMenuTap, logout }) => (
 export default Menu;
 ```
 
-The `WithPermissions` component
+The `WithPermission` component accepts the following props:
+
+- `authClient`: the same ([authClient](https://marmelab.com/admin-on-rest/Authentication.html)) as in Admin-on-rest. However, this client must be able to handle the new `AUTH_GET_PERMISSIONS` type.
+- `value`: the permissions to check (could be a role, an array of rules, etc) or a `resolver` function. (same as `Permission`)
 
 ## Contributing
 
