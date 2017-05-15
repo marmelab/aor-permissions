@@ -3,22 +3,20 @@ import PropTypes from 'proptypes';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
 
 import DefaultLoading from './Loading';
-import DefaultNotFound from './NotFound';
 import { AUTH_GET_PERMISSIONS } from './constants';
-import resolvePermissions from './resolvePermissions';
+import { resolvePermission } from './resolvePermissions';
 
-export default class SwitchPermissions extends Component {
+export default class WithPermission extends Component {
     static propTypes = {
         authClient: PropTypes.func.isRequired,
         children: PropTypes.node.isRequired,
-        notFound: PropTypes.func,
         loading: PropTypes.func,
+        notFound: PropTypes.func,
         record: PropTypes.object,
         resource: PropTypes.string,
     };
 
     static defaultProps = {
-        notFound: DefaultNotFound,
         loading: DefaultLoading,
     };
 
@@ -29,17 +27,15 @@ export default class SwitchPermissions extends Component {
     };
 
     async componentWillMount() {
-        const { authClient, children, record, resource } = this.props;
-        const mappings = React.Children.map(children, ({ props: { permissions, children, exact } }) => ({
-            permissions,
-            view: children,
-            exact,
-        })) || [];
-
+        const { authClient, children, record, resource, permissions: requiredPersmissions, exact } = this.props;
         const permissions = await authClient(AUTH_GET_PERMISSIONS, { record, resource });
-        const match = await resolvePermissions({ mappings, permissions, record, resource });
+        const match = await resolvePermission({ permissions, record, resource })({
+            exact,
+            permissions: requiredPersmissions,
+            view: children,
+        });
 
-        if (match) {
+        if (match && match.matched) {
             this.setState({ match: match.view });
         } else {
             this.setState({ isNotFound: true, permissions });
@@ -51,7 +47,11 @@ export default class SwitchPermissions extends Component {
         const { authClient, children, notFound, loading, ...props } = this.props;
 
         if (isNotFound) {
-            return createElement(notFound, { role });
+            if (notFound) {
+                return createElement(notFound, { role });
+            }
+
+            return null;
         }
 
         if (!match) {

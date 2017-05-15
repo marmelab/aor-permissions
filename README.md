@@ -153,7 +153,7 @@ The `Permission` component requires either a `value` with the permissions to che
 
 If both are specified, only `resolver` will be used.
 
-It must contain a single child which is the view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)) displayed if permissions are matched.
+You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
 #### Using the value prop
 
@@ -181,6 +181,43 @@ The function specified for `resolver` must a promise resolving to either `true` 
 - `exact`: the value of the `exact` prop
 
 If multiple matches are found, the first one will be applied.
+
+### WithPermission
+
+A simpler component which will render its children only if its permissions are matched. For example, in a custom [Menu](https://marmelab.com/admin-on-rest/AdminResource.html#menu):
+
+```js
+import React from 'react';
+import MenuItem from 'material-ui/MenuItem';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import { WithPermission } from 'aor-permissions';
+import authClient from './authClient';
+
+const Menu = ({ onMenuTap, logout }) => (
+    <div>
+        {/* Other menu items */}
+
+        <WithPermission authClient={authClient} permissions="admin">
+            <MenuItem
+                containerElement={<Link to="/configuration" />}
+                primaryText="Configuration"
+                leftIcon={<SettingsIcon />}
+                onTouchTap={onMenuTap}
+            />
+        </WithPermission>
+        {logout}
+    </div>
+);
+
+export default Menu;
+```
+
+The `WithPermission` component accepts the following props:
+
+- `authClient`: the same ([authClient](https://marmelab.com/admin-on-rest/Authentication.html)) as in Admin-on-rest. However, this client must be able to handle the new `AUTH_GET_PERMISSIONS` type.
+- `value`: the permissions to check (could be a role, an array of rules, etc) or a `resolver` function. (same as `Permission`)
+
+You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
 ## Contributing
 
