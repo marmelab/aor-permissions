@@ -1,7 +1,7 @@
 {
   "name": "aor-permissions",
   "version": "0.0.1",
-  "description": "A input wrapper for inputs depending on other form values",
+  "description": "A component for Admin-on-rest allowing to switch views depending on user roles.",
   "main": "./lib/index.js",
   "repository": "https://github.com/marmelab/aor-permissions.git",
   "authors": [
