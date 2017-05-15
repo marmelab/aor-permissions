@@ -182,6 +182,38 @@ The function specified for `resolver` must a promise resolving to either `true` 
 
 If multiple matches are found, the first one will be applied.
 
+### WithPermission
+
+A simpler component which will render its children only if its permissions are matched. For example, in a custom [Menu](https://marmelab.com/admin-on-rest/AdminResource.html#menu):
+
+```js
+import React from 'react';
+import MenuItem from 'material-ui/MenuItem';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import { WithPermission } from 'aor-permissions';
+import authClient from './authClient';
+
+const Menu = ({ onMenuTap, logout }) => (
+    <div>
+        {/* Other menu items */}
+
+        <WithPermission authClient={authClient} permissions="admin">
+            <MenuItem
+                containerElement={<Link to="/configuration" />}
+                primaryText="Configuration"
+                leftIcon={<SettingsIcon />}
+                onTouchTap={onMenuTap}
+            />
+        </WithPermission>
+        {logout}
+    </div>
+);
+
+export default Menu;
+```
+
+The `WithPermissions` component
+
 ## Contributing
 
 Run the tests with this command:
