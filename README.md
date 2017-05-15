@@ -6,6 +6,11 @@ A component for [Admin-on-rest](https://github.com/marmelab/admin-on-rest) allow
 
 - [Installation](#installation)
 - [Usage](#installation)
+- [API](#api)
+    - [SwitchPermissions](#switchpermissions)
+    - [Permission](#permission)
+    - [WithPermission](#withpermission)
+    - [AuthProvider](#authprovider)
 - [Options](#options)
 
 ## Installation
@@ -218,6 +223,28 @@ The `WithPermission` component accepts the following props:
 - `value`: the permissions to check (could be a role, an array of rules, etc) or a `resolver` function. (same as `Permission`)
 
 You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
+
+### AuthProvider
+
+Requiring and specifying the `authClient` for each `SwitchPermissions` and `WithPermission` components could be cumbersome. That's why we also provided an `AuthProvider` component.
+
+It must enclose the [Admin](https://marmelab.com/admin-on-rest/AdminResource.html#the-admin-component) component.
+
+It accepts a single prop: `authClient`.
+
+```js
+import { Admin, Resource } from 'admin-on-rest';
+import { AuthProvider } from 'aor-permissions';
+import authClient from './authClient';
+
+export const App = () => (
+    <AuthProvider authClient={authClient}>
+        <Admin>
+            {/* Usual Resource components */}
+        </Admin>
+    </AuthProvider>
+)
+```
 
 ## Contributing
 
