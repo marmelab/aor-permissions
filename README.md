@@ -153,7 +153,7 @@ The `Permission` component requires either a `value` with the permissions to che
 
 If both are specified, only `resolver` will be used.
 
-It must contain a single child which is the view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)) displayed if permissions are matched.
+You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
 #### Using the value prop
 
@@ -216,6 +216,8 @@ The `WithPermission` component accepts the following props:
 
 - `authClient`: the same ([authClient](https://marmelab.com/admin-on-rest/Authentication.html)) as in Admin-on-rest. However, this client must be able to handle the new `AUTH_GET_PERMISSIONS` type.
 - `value`: the permissions to check (could be a role, an array of rules, etc) or a `resolver` function. (same as `Permission`)
+
+You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
 ## Contributing
 
