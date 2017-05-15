@@ -1,13 +1,14 @@
 import React, { createElement, Component } from 'react';
 import PropTypes from 'proptypes';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
+import getContext from 'recompose/getContext';
 
 import DefaultLoading from './Loading';
 import DefaultNotFound from './NotFound';
 import { AUTH_GET_PERMISSIONS } from './constants';
 import resolvePermissions from './resolvePermissions';
 
-export default class SwitchPermissions extends Component {
+export class SwitchPermissionsComponent extends Component {
     static propTypes = {
         authClient: PropTypes.func.isRequired,
         children: PropTypes.node.isRequired,
@@ -61,3 +62,7 @@ export default class SwitchPermissions extends Component {
         return <span>{React.Children.map(match, child => <FormField input={child} {...props} />)}</span>;
     }
 }
+
+export default getContext({
+    authClient: PropTypes.func,
+})(SwitchPermissionsComponent);

@@ -1,12 +1,13 @@
 import React, { createElement, Component } from 'react';
 import PropTypes from 'proptypes';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
+import getContext from 'recompose/getContext';
 
 import DefaultLoading from './Loading';
 import { AUTH_GET_PERMISSIONS } from './constants';
 import { resolvePermission } from './resolvePermissions';
 
-export default class WithPermission extends Component {
+export class WithPermissionComponent extends Component {
     static propTypes = {
         authClient: PropTypes.func.isRequired,
         children: PropTypes.node.isRequired,
@@ -14,6 +15,7 @@ export default class WithPermission extends Component {
         notFound: PropTypes.func,
         record: PropTypes.object,
         resource: PropTypes.string,
+        value: PropTypes.any.isRequired,
     };
 
     static defaultProps = {
@@ -27,11 +29,11 @@ export default class WithPermission extends Component {
     };
 
     async componentWillMount() {
-        const { authClient, children, record, resource, permissions: requiredPersmissions, exact } = this.props;
+        const { authClient, children, record, resource, value: requiredPermissions, exact } = this.props;
         const permissions = await authClient(AUTH_GET_PERMISSIONS, { record, resource });
         const match = await resolvePermission({ permissions, record, resource })({
             exact,
-            permissions: requiredPersmissions,
+            permissions: requiredPermissions,
             view: children,
         });
 
@@ -61,3 +63,7 @@ export default class WithPermission extends Component {
         return <span>{React.Children.map(match, child => <FormField input={child} {...props} />)}</span>;
     }
 }
+
+export default getContext({
+    authClient: PropTypes.func,
+})(WithPermissionComponent);
