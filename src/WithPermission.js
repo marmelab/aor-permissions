@@ -29,11 +29,11 @@ export class WithPermissionComponent extends Component {
     };
 
     async componentWillMount() {
-        const { authClient, children, record, resource, value: requiredPersmissions, exact } = this.props;
+        const { authClient, children, record, resource, value: requiredPermissions, exact } = this.props;
         const permissions = await authClient(AUTH_GET_PERMISSIONS, { record, resource });
         const match = await resolvePermission({ permissions, record, resource })({
             exact,
-            permissions: requiredPersmissions,
+            permissions: requiredPermissions,
             view: children,
         });
 
