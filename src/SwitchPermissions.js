@@ -1,5 +1,7 @@
 import React, { createElement, cloneElement, Component } from 'react';
 import PropTypes from 'proptypes';
+import FormField from 'admin-on-rest/lib/mui/form/FormField';
+
 import DefaultLoading from './Loading';
 import DefaultNotFound from './NotFound';
 import { AUTH_GET_PERMISSIONS } from './constants';
@@ -56,6 +58,6 @@ export default class SwitchPermissions extends Component {
             return createElement(loading);
         }
 
-        return cloneElement(match, props);
+        return <div>{React.Children.map(match, child => <FormField input={cloneElement(child)} {...props} />)}</div>;
     }
 }
