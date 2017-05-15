@@ -11,7 +11,6 @@ A component for [Admin-on-rest](https://github.com/marmelab/admin-on-rest) allow
     - [Permission](#permission)
     - [WithPermission](#withpermission)
     - [AuthProvider](#authprovider)
-- [Options](#options)
 
 ## Installation
 
