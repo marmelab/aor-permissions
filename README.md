@@ -181,8 +181,9 @@ The function specified for `resolve` may return `true` or `false` directly or a 
 
 - `permissions`: the result of the `authClient` call.
 - `resource`: the resource being checked (eg: `products`, `posts`, etc.)
-- `record`: Only when inside an `Edit` component, the record being edited
+- `value`: the value of the `value` prop
 - `exact`: the value of the `exact` prop
+- `record`: Only when inside an `Edit` component, the record being edited
 
 If multiple matches are found, the first one will be applied.
 
