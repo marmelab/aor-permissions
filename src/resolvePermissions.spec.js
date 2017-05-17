@@ -8,7 +8,7 @@ describe('resolvePermissions', () => {
             { permissions: 'admin', view: 'SingleValue' },
             { permissions: ['ignored_role', 'array_value'], view: 'ArrayValue' },
             { permissions: ['array_value_exact_1', 'array_value_exact_2'], exact: true, view: 'ArrayValueExactMatch' },
-            { permissions: checker, view: 'FunctionValue', exact: true },
+            { resolve: checker, view: 'FunctionValue', exact: true },
         ],
         resource: 'products',
         record: { category: 'announcements' },

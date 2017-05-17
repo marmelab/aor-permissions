@@ -9,13 +9,15 @@ import { resolvePermission } from './resolvePermissions';
 
 export class WithPermissionComponent extends Component {
     static propTypes = {
-        authClient: PropTypes.func.isRequired,
+        authClient: PropTypes.func,
+        authClientFromContext: PropTypes.func,
         children: PropTypes.node.isRequired,
         loading: PropTypes.func,
         notFound: PropTypes.func,
         record: PropTypes.object,
         resource: PropTypes.string,
-        value: PropTypes.any.isRequired,
+        value: PropTypes.any,
+        resolve: PropTypes.func,
     };
 
     static defaultProps = {
@@ -29,11 +31,23 @@ export class WithPermissionComponent extends Component {
     };
 
     async componentWillMount() {
-        const { authClient, children, record, resource, value: requiredPermissions, exact } = this.props;
-        const permissions = await authClient(AUTH_GET_PERMISSIONS, { record, resource });
+        const {
+            authClient,
+            authClientFromContext,
+            children,
+            record,
+            resolve,
+            resource,
+            value: requiredPermissions,
+            exact,
+        } = this.props;
+        const finalAuthClient = authClient || authClientFromContext;
+
+        const permissions = await finalAuthClient(AUTH_GET_PERMISSIONS, { record, resource });
         const match = await resolvePermission({ permissions, record, resource })({
             exact,
             permissions: requiredPermissions,
+            resolve,
             view: children,
         });
 
@@ -46,7 +60,7 @@ export class WithPermissionComponent extends Component {
 
     render() {
         const { isNotFound, match, role } = this.state;
-        const { authClient, children, notFound, loading, ...props } = this.props;
+        const { authClient, authClientFromContext, children, notFound, loading, ...props } = this.props;
 
         if (isNotFound) {
             if (notFound) {
@@ -65,5 +79,5 @@ export class WithPermissionComponent extends Component {
 }
 
 export default getContext({
-    authClient: PropTypes.func,
+    authClientFromContext: PropTypes.func,
 })(WithPermissionComponent);

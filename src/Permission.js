@@ -6,7 +6,8 @@ const Permission = () => <span>&lt;ForRole&gt; elements are for configuration on
 Permission.propTypes = {
     children: PropTypes.node.isRequired,
     exact: PropTypes.bool,
-    permissions: PropTypes.any.isRequired,
+    value: PropTypes.any,
+    resolve: PropTypes.any,
 };
 
 export default Permission;
