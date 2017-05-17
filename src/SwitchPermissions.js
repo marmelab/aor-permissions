@@ -4,13 +4,13 @@ import FormField from 'admin-on-rest/lib/mui/form/FormField';
 import getContext from 'recompose/getContext';
 
 import DefaultLoading from './Loading';
-import DefaultNotFound from './NotFound';
 import { AUTH_GET_PERMISSIONS } from './constants';
 import resolvePermissions from './resolvePermissions';
 
 export class SwitchPermissionsComponent extends Component {
     static propTypes = {
-        authClient: PropTypes.func.isRequired,
+        authClient: PropTypes.func,
+        authClientFromContext: PropTypes.func,
         children: PropTypes.node.isRequired,
         notFound: PropTypes.func,
         loading: PropTypes.func,
@@ -19,7 +19,7 @@ export class SwitchPermissionsComponent extends Component {
     };
 
     static defaultProps = {
-        notFound: DefaultNotFound,
+        notFound: null,
         loading: DefaultLoading,
     };
 
@@ -30,14 +30,17 @@ export class SwitchPermissionsComponent extends Component {
     };
 
     async componentWillMount() {
-        const { authClient, children, record, resource } = this.props;
-        const mappings = React.Children.map(children, ({ props: { permissions, children, exact } }) => ({
-            permissions,
+        const { authClient, authClientFromContext, children, record, resource } = this.props;
+        const mappings = React.Children.map(children, ({ props: { value, resolve, children, exact } }) => ({
+            permissions: value,
+            resolve,
             view: children,
             exact,
         })) || [];
 
-        const permissions = await authClient(AUTH_GET_PERMISSIONS, { record, resource });
+        const finalAuthClient = authClient || authClientFromContext;
+
+        const permissions = await finalAuthClient(AUTH_GET_PERMISSIONS, { record, resource });
         const match = await resolvePermissions({ mappings, permissions, record, resource });
 
         if (match) {
@@ -49,10 +52,13 @@ export class SwitchPermissionsComponent extends Component {
 
     render() {
         const { isNotFound, match, role } = this.state;
-        const { authClient, children, notFound, loading, ...props } = this.props;
+        const { authClient, authClientFromContext, children, notFound, loading, ...props } = this.props;
 
         if (isNotFound) {
-            return createElement(notFound, { role });
+            if (notFound) {
+                return createElement(notFound, { role });
+            }
+            return null;
         }
 
         if (!match) {
@@ -64,5 +70,5 @@ export class SwitchPermissionsComponent extends Component {
 }
 
 export default getContext({
-    authClient: PropTypes.func,
+    authClientFromContext: PropTypes.func,
 })(SwitchPermissionsComponent);

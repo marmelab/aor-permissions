@@ -1,6 +1,6 @@
 export const resolvePermission = ({ permissions, record, resource }) => mapping => {
-    if (typeof mapping.permissions === 'function') {
-        const result = mapping.permissions({ record, resource, permissions, exact: mapping.exact });
+    if (typeof mapping.resolve === 'function') {
+        const result = mapping.resolve({ record, resource, permissions, exact: mapping.exact, value: mapping.value });
 
         if (typeof result.then === 'function') {
             return result.then(matched => ({ matched, view: mapping.view }));
@@ -41,6 +41,6 @@ export const resolvePermission = ({ permissions, record, resource }) => mapping 
 };
 
 export default ({ mappings, permissions, record, resource }) => {
-    const resolve = resolvePermission({ permissions, record, resource });
-    return Promise.all(mappings.map(resolve)).then(matchers => matchers.find(match => match.matched));
+    const promise = resolvePermission({ permissions, record, resource });
+    return Promise.all(mappings.map(promise)).then(matchers => matchers.find(match => match.matched));
 };

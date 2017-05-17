@@ -127,10 +127,10 @@ const checkUserCanEdit = (params) => {
 export const PostEdit = props => (
     <Edit {...props}>
         <SwitchPermissions authClient={authClient} {...props}>
-            <Permission resolver={checkUserCanEdit}>
+            <Permission resolve={checkUserCanEdit}>
                 {/* Usual layout component */}
             </Permission>
-            <Permission resolver={checkUserCanEdit}>
+            <Permission resolve={checkUserCanEdit}>
                 {/* Usual layout component */}
             </Permission>
         </SwitchPermissions>
@@ -147,15 +147,15 @@ The `SwitchPermissions` component requires an `authClient` prop which accepts th
 It also accepts two optional props:
 
 - `loading`: A component to display while checking for permissions. It defaults to the Material-UI [LinearProgress](http://www.material-ui.com/#/components/linear-progress) in `indeterminate` mode.
-- `notFound`: A component to display when no match was found while checking the permissions
+- `notFound`: A component to display when no match was found while checking the permissions. Default to `null`.
 
 The `SwitchPermissions` component only accepts `Permission` components as children. They are used to map a permission to a view.
 
 ### Permission
 
-The `Permission` component requires either a `value` with the permissions to check (could be a role, an array of rules, etc) or a `resolver` function.
+The `Permission` component requires either a `value` with the permissions to check (could be a role, an array of rules, etc) or a `resolve` function.
 
-If both are specified, only `resolver` will be used.
+If both are specified, only `resolve` will be used.
 
 You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
@@ -175,14 +175,15 @@ The following table shows how permissions are resolved:
 | array         | array             | `false` | at least one value of permissions must be present in authClient result |
 | array         | array             | `true`  | all values in permissions must be present in authClient result         |
 
-#### Using the resolver prop
+#### Using the resolve prop
 
-The function specified for `resolver` must a promise resolving to either `true` or `false`. It will be called with an object having the following properties:
+The function specified for `resolve` may return `true` or `false` directly or a promise resolving to either `true` or `false`. It will be called with an object having the following properties:
 
 - `permissions`: the result of the `authClient` call.
 - `resource`: the resource being checked (eg: `products`, `posts`, etc.)
-- `record`: Only when inside an `Edit` component, the record being edited
+- `value`: the value of the `value` prop
 - `exact`: the value of the `exact` prop
+- `record`: Only when inside an `Edit` component, the record being edited
 
 If multiple matches are found, the first one will be applied.
 
@@ -201,7 +202,7 @@ const Menu = ({ onMenuTap, logout }) => (
     <div>
         {/* Other menu items */}
 
-        <WithPermission authClient={authClient} permissions="admin">
+        <WithPermission authClient={authClient} value="admin">
             <MenuItem
                 containerElement={<Link to="/configuration" />}
                 primaryText="Configuration"
@@ -219,7 +220,8 @@ export default Menu;
 The `WithPermission` component accepts the following props:
 
 - `authClient`: the same ([authClient](https://marmelab.com/admin-on-rest/Authentication.html)) as in Admin-on-rest. However, this client must be able to handle the new `AUTH_GET_PERMISSIONS` type.
-- `value`: the permissions to check (could be a role, an array of rules, etc) or a `resolver` function. (same as `Permission`)
+- `value`: the permissions to check (could be a role, an array of rules, etc)
+- `resolve`: a function called to resolve the permissions. (same as `Permission`)
 
 You can pass anything as children for this component: a view ([List](https://marmelab.com/admin-on-rest/List.html), [Create](https://marmelab.com/admin-on-rest/CreateEdit.html), [Edit](https://marmelab.com/admin-on-rest/CreateEdit.html)), an input, a React node, whatever.
 
