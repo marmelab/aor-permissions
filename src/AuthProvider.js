@@ -8,6 +8,6 @@ AuthProviderComponent.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
-export default withContext({ authClient: PropTypes.func }, ({ authClient }) => ({ authClientFromContext: authClient }))(
-    AuthProviderComponent,
-);
+export default withContext({ authClientFromContext: PropTypes.func }, ({ authClient }) => ({
+    authClientFromContext: authClient,
+}))(AuthProviderComponent);
