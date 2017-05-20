@@ -193,6 +193,7 @@ A simpler component which will render its children only if its permissions are m
 
 ```js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import MenuItem from 'material-ui/MenuItem';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import { WithPermission } from 'aor-permissions';
