@@ -65,7 +65,27 @@ export class SwitchPermissionsComponent extends Component {
             return createElement(loading);
         }
 
-        return <span>{React.Children.map(match, child => <FormField input={child} {...props} />)}</span>;
+        if (Array.isArray(match)) {
+            return (
+                <div>
+                    {React.Children.map(match, child => (
+                        <div
+                            key={child.props.source}
+                            style={child.props.style}
+                            className={`aor-input-${child.props.source}`}
+                        >
+                            <FormField input={child} {...props} />
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        return (
+            <div key={match.props.source} style={match.props.style} className={`aor-input-${match.props.source}`}>
+                <FormField input={match} {...props} />
+            </div>
+        );
     }
 }
 
