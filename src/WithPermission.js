@@ -74,7 +74,31 @@ export class WithPermissionComponent extends Component {
             return createElement(loading);
         }
 
-        return <span>{React.Children.map(match, child => <FormField input={child} {...props} />)}</span>;
+        if (Array.isArray(children)) {
+            return (
+                <div>
+                    {React.Children.map(children, child => (
+                        <div
+                            key={child.props.source}
+                            style={child.props.style}
+                            className={`aor-input-${child.props.source}`}
+                        >
+                            <FormField input={child} {...props} />
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        return (
+            <div
+                key={children.props.source}
+                style={children.props.style}
+                className={`aor-input-${children.props.source}`}
+            >
+                <FormField input={children} {...props} />
+            </div>
+        );
     }
 }
 
