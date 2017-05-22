@@ -50,6 +50,12 @@ export class SwitchPermissionsComponent extends Component {
         }
     }
 
+    renderSourceChild = (child, props) => (
+        <div key={child.props.source} style={child.props.style} className={`aor-input-${child.props.source}`}>
+            <FormField input={child} {...props} />
+        </div>
+    );
+
     render() {
         const { isNotFound, match, role } = this.state;
         const { authClient, authClientFromContext, children, notFound, loading, ...props } = this.props;
@@ -68,24 +74,16 @@ export class SwitchPermissionsComponent extends Component {
         if (Array.isArray(match)) {
             return (
                 <div>
-                    {React.Children.map(match, child => (
-                        <div
-                            key={child.props.source}
-                            style={child.props.style}
-                            className={`aor-input-${child.props.source}`}
-                        >
-                            <FormField input={child} {...props} />
-                        </div>
-                    ))}
+                    {React.Children.map(
+                        match,
+                        child =>
+                            child.props.source ? this.renderSourceChild(child) : <FormField input={child} {...props} />,
+                    )}
                 </div>
             );
         }
 
-        return (
-            <div key={match.props.source} style={match.props.style} className={`aor-input-${match.props.source}`}>
-                <FormField input={match} {...props} />
-            </div>
-        );
+        return match.props.source ? this.renderSourceChild(match) : <FormField input={match} {...props} />;
     }
 }
 
