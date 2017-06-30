@@ -66,7 +66,7 @@ export class WithPermissionComponent extends Component {
 
     render() {
         const { isNotFound, match, role } = this.state;
-        const { authClient, authClientFromContext, children, notFound, loading, ...props } = this.props;
+        const { authClient, authClientFromContext, children, notFound, loading, resource, record, resolve, value, exact, ...props } = this.props;
 
         if (isNotFound) {
             if (notFound) {
@@ -86,13 +86,13 @@ export class WithPermissionComponent extends Component {
                     {React.Children.map(
                         children,
                         child =>
-                            child.props.source ? this.renderSourceChild(child) : <FormField input={child} {...props} />,
+                            child.props.source ? this.renderSourceChild(child, props) : <FormField input={child} {...props} />,
                     )}
                 </div>
             );
         }
 
-        return children.props.source ? this.renderSourceChild(children) : <FormField input={children} {...props} />;
+        return children.props.source ? this.renderSourceChild(children, props) : <FormField input={children} {...props} />;
     }
 }
 
