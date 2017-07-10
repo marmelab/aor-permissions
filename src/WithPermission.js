@@ -1,5 +1,5 @@
 import React, { createElement, Component } from 'react';
-import PropTypes from 'proptypes';
+import PropTypes from 'prop-types';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
 import getContext from 'recompose/getContext';
 
@@ -12,6 +12,7 @@ export class WithPermissionComponent extends Component {
         authClient: PropTypes.func,
         authClientFromContext: PropTypes.func,
         children: PropTypes.node.isRequired,
+        exact: PropTypes.bool,
         loading: PropTypes.func,
         notFound: PropTypes.func,
         record: PropTypes.object,
@@ -58,15 +59,26 @@ export class WithPermissionComponent extends Component {
         }
     }
 
-    renderSourceChild = (child, props) => (
+    renderSourceChild = (child, props) =>
         <div key={child.props.source} style={child.props.style} className={`aor-input-${child.props.source}`}>
             <FormField input={child} {...props} />
-        </div>
-    );
+        </div>;
 
     render() {
         const { isNotFound, match, role } = this.state;
-        const { authClient, authClientFromContext, children, notFound, loading, resource, record, resolve, value, exact, ...props } = this.props;
+        const {
+            authClient,
+            authClientFromContext,
+            children,
+            notFound,
+            loading,
+            resource,
+            record,
+            resolve,
+            value,
+            exact,
+            ...props
+        } = this.props;
 
         if (isNotFound) {
             if (notFound) {
@@ -86,13 +98,17 @@ export class WithPermissionComponent extends Component {
                     {React.Children.map(
                         children,
                         child =>
-                            child.props.source ? this.renderSourceChild(child, props) : <FormField input={child} {...props} />,
+                            child.props.source
+                                ? this.renderSourceChild(child, props)
+                                : <FormField input={child} {...props} />,
                     )}
                 </div>
             );
         }
 
-        return children.props.source ? this.renderSourceChild(children, props) : <FormField input={children} {...props} />;
+        return children.props.source
+            ? this.renderSourceChild(children, props)
+            : <FormField input={children} {...props} />;
     }
 }
 
