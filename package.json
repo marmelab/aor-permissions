@@ -1,6 +1,6 @@
 {
   "name": "aor-permissions",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A component for Admin-on-rest allowing to switch views depending on user roles.",
   "main": "./lib/index.js",
   "repository": "https://github.com/marmelab/aor-permissions.git",
