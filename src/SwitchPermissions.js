@@ -1,5 +1,5 @@
 import React, { createElement, Component } from 'react';
-import PropTypes from 'proptypes';
+import PropTypes from 'prop-types';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
 import getContext from 'recompose/getContext';
 
@@ -31,12 +31,13 @@ export class SwitchPermissionsComponent extends Component {
 
     async componentWillMount() {
         const { authClient, authClientFromContext, children, record, resource } = this.props;
-        const mappings = React.Children.map(children, ({ props: { value, resolve, children, exact } }) => ({
-            permissions: value,
-            resolve,
-            view: children,
-            exact,
-        })) || [];
+        const mappings =
+            React.Children.map(children, ({ props: { value, resolve, children, exact } }) => ({
+                permissions: value,
+                resolve,
+                view: children,
+                exact,
+            })) || [];
 
         const finalAuthClient = authClient || authClientFromContext;
 
@@ -50,11 +51,10 @@ export class SwitchPermissionsComponent extends Component {
         }
     }
 
-    renderSourceChild = (child, props) => (
+    renderSourceChild = (child, props) =>
         <div key={child.props.source} style={child.props.style} className={`aor-input-${child.props.source}`}>
             <FormField input={child} {...props} />
-        </div>
-    );
+        </div>;
 
     render() {
         const { isNotFound, match, role } = this.state;
