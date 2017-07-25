@@ -1,4 +1,4 @@
-import React, { createElement, Component } from 'react';
+import React, { createElement, Children, Component } from 'react';
 import PropTypes from 'prop-types';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
 import getContext from 'recompose/getContext';
@@ -95,7 +95,7 @@ export class WithPermissionComponent extends Component {
         if (Array.isArray(children)) {
             return (
                 <div>
-                    {React.Children.map(
+                    {Children.map(
                         children,
                         child =>
                             child.props.source
@@ -112,6 +112,10 @@ export class WithPermissionComponent extends Component {
     }
 }
 
-export default getContext({
+const WithPermission = getContext({
     authClientFromContext: PropTypes.func,
 })(WithPermissionComponent);
+
+WithPermission.displayName = 'WithPermission';
+
+export default WithPermission;

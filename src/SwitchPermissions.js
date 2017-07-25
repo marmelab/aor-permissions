@@ -1,4 +1,4 @@
-import React, { createElement, Component } from 'react';
+import React, { createElement, Children, Component } from 'react';
 import PropTypes from 'prop-types';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
 import getContext from 'recompose/getContext';
@@ -32,7 +32,7 @@ export class SwitchPermissionsComponent extends Component {
     async componentWillMount() {
         const { authClient, authClientFromContext, children, record, resource } = this.props;
         const mappings =
-            React.Children.map(children, ({ props: { value, resolve, children, exact } }) => ({
+            Children.map(children, ({ props: { value, resolve, children, exact } }) => ({
                 permissions: value,
                 resolve,
                 view: children,
@@ -74,7 +74,7 @@ export class SwitchPermissionsComponent extends Component {
         if (Array.isArray(match)) {
             return (
                 <div>
-                    {React.Children.map(
+                    {Children.map(
                         match,
                         child =>
                             child.props.source ? this.renderSourceChild(child) : <FormField input={child} {...props} />,
@@ -87,6 +87,10 @@ export class SwitchPermissionsComponent extends Component {
     }
 }
 
-export default getContext({
+const SwitchPermissions = getContext({
     authClientFromContext: PropTypes.func,
 })(SwitchPermissionsComponent);
+
+SwitchPermissions.displayName = 'SwitchPermissions';
+
+export default SwitchPermissions;
