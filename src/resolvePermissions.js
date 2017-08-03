@@ -1,6 +1,12 @@
 export const resolvePermission = ({ permissions, record, resource }) => mapping => {
     if (typeof mapping.resolve === 'function') {
-        const result = mapping.resolve({ record, resource, permissions, exact: mapping.exact, value: mapping.value });
+        const result = mapping.resolve({
+            record,
+            resource,
+            permissions,
+            exact: mapping.exact,
+            value: mapping.permissions,
+        });
 
         if (typeof result.then === 'function') {
             return result.then(matched => ({ matched, view: mapping.view }));
