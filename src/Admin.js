@@ -67,7 +67,7 @@ export const applyPermissionsToResources = async ({
     applyPermissionsToResource = defaultApplyPermissionsToResource,
 }) => {
     const newResources = await Promise.all(
-        Children.map(resources, resource => applyPermissionsToResource(authClient, resource)),
+        Children.map(resources, resource => applyPermissionsToResource({ authClient, resource })),
     );
 
     return newResources.filter(resource => !!resource);
