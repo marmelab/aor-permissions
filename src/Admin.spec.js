@@ -7,7 +7,7 @@ import {
 } from './Admin';
 
 describe('<Admin>', () => {
-    describe('applyPermissionsToAction', () => {
+    describe('defaultApplyPermissionsToAction', () => {
         it('resolves to the action component if no permissions attributes are defined', async () => {
             const result = await defaultApplyPermissionsToAction({
                 permissions: [],
@@ -133,7 +133,7 @@ describe('<Admin>', () => {
     describe('applyPermissionsToResources', () => {
         it('resolves to filtered resources', async () => {
             const applyPermissionsToResource = createSpy().andCall(
-                (authClient, res) => (res === 'resource1' ? res : false),
+                ({ resource }) => (resource === 'resource1' ? resource : false),
             );
 
             const resources = await applyPermissionsToResources({
@@ -143,8 +143,14 @@ describe('<Admin>', () => {
             });
 
             expect(resources).toEqual(['resource1']);
-            expect(applyPermissionsToResource).toHaveBeenCalledWith('authClientImpl', 'resource1');
-            expect(applyPermissionsToResource).toHaveBeenCalledWith('authClientImpl', 'resource2');
+            expect(applyPermissionsToResource).toHaveBeenCalledWith({
+                authClient: 'authClientImpl',
+                resource: 'resource1',
+            });
+            expect(applyPermissionsToResource).toHaveBeenCalledWith({
+                authClient: 'authClientImpl',
+                resource: 'resource2',
+            });
         });
     });
 });
