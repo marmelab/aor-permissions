@@ -142,6 +142,7 @@ export const PostEdit = props => (
 
 ```jsx
 import { Admin } from 'aor-permissions';
+import { Resource } from 'admin-on-rest';
 import restClient from '../restClient';
 import authClient from '../authClient';
 import { PostList, PostEdit, PostCreate } from './posts';
