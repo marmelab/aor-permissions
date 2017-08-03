@@ -32,7 +32,7 @@ First, the [authClient](https://marmelab.com/admin-on-rest/Authentication.html) 
 
 Here is a naive implementation using localstorage:
 
-```js
+```jsx
 // in authClient.js
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_CHECK, AUTH_ERROR } from 'admin-on-rest';
 import { AUTH_GET_PERMISSIONS } from 'aor-permissions';
@@ -69,9 +69,9 @@ export default (type, params) => {
 
 Then, you may use the `SwitchPermissions` and `Permission` components:
 
-### Simple permissions check
+### Simple permissions check
 
-```js
+```jsx
 // In products.js
 import { SwitchPermissions, Permission } from 'aor-permissions';
 import authClient from '../authClient';
@@ -102,7 +102,7 @@ export const ProductEdit = props => (
 
 ### Permissions check depending on the resource/record
 
-```js
+```jsx
 // In products.js
 import { SwitchPermissions, Permission } from 'aor-permissions';
 import authClient from '../authClient';
@@ -136,6 +136,47 @@ export const PostEdit = props => (
         </SwitchPermissions>
     </Edit>
 );
+```
+
+### Protect access to resources
+
+```jsx
+import { Admin } from 'aor-permissions';
+import { Resource } from 'admin-on-rest';
+import restClient from '../restClient';
+import authClient from '../authClient';
+import { PostList, PostEdit, PostCreate } from './posts';
+
+const resolveAccessToPosts = ({ resource, permissions, exact, value }) => {
+    // value = the requested permissions specified in the `permissions` prop (eg `admin`). May be undefined
+    // resource = the requested resource (eg `posts`)
+    // exact = the value of the `exact` prop
+    // permissions = the result of the authClient call
+};
+
+const resolveEditAccess = ({ resource, permissions, exact, value }) => {
+    // value = the requested permissions specified in the `permissions` prop (eg `admin`). May be undefined
+    // resource = the requested resource (eg `posts`)
+    // exact = the value of the `exact` prop
+    // permissions = the result of the authClient call
+};
+
+const App = () => (
+    <Admin restClient={restClient} authClient={authClient}>
+        <Resource
+            name="posts"
+            resolve={resolveAccessToPosts}
+            list={PostList}
+            edit={PostEdit}
+            editPermissions="admin"
+            editResolve={resolveEditAccess}
+            create={PostCreate}
+            createPermissions="admin"
+            createExact={true}
+        />
+    </Admin>
+);
+
 ```
 
 ## API
@@ -191,7 +232,7 @@ If multiple matches are found, the first one will be applied.
 
 A simpler component which will render its children only if its permissions are matched. For example, in a custom [Menu](https://marmelab.com/admin-on-rest/AdminResource.html#menu):
 
-```js
+```jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MenuItem from 'material-ui/MenuItem';
@@ -234,7 +275,7 @@ It must enclose the [Admin](https://marmelab.com/admin-on-rest/AdminResource.htm
 
 It accepts a single prop: `authClient`.
 
-```js
+```jsx
 import { Admin, Resource } from 'admin-on-rest';
 import { AuthProvider } from 'aor-permissions';
 import authClient from './authClient';
@@ -247,6 +288,28 @@ export const App = () => (
     </AuthProvider>
 )
 ```
+
+### Admin
+
+This component can be used instead of the default `Admin` component from `admin-on-rest`.
+
+It allows to define permissions on each resource and for each resource's view.
+
+It accepts the following props:
+
+- `permissions`: to define the permissions required for the whole resource
+- `resolve`: function called to check whether permissions for the whole resource are ok
+- `exact`: Boolean for exact match (useful when `permissions` is an array)
+
+If defined, the `resolve` function will be called with an object containing the following properties:
+
+- `permissions`: the result of the `authClient` call.
+- `value`: the value of the `permissions` prop: the requested permissions
+- `exact`: the value of the `exact` prop
+
+Additionnaly, the `Admin` components accepts for each view (list, create, edit and remove) the same three props prefixed with the view's name. For example: `listPermissions`, `listResolve` and `listExact`.
+
+**Note**: when using this custom `Admin` component, there's no need to use the `AuthProvider` too as it will be added automatically.
 
 ## Contributing
 
