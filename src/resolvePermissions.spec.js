@@ -8,7 +8,7 @@ describe('resolvePermissions', () => {
             { permissions: 'admin', view: 'SingleValue' },
             { permissions: ['ignored_role', 'array_value'], view: 'ArrayValue' },
             { permissions: ['array_value_exact_1', 'array_value_exact_2'], exact: true, view: 'ArrayValueExactMatch' },
-            { resolve: checker, view: 'FunctionValue', exact: true, value: 'foo' },
+            { resolve: checker, view: 'FunctionValue', exact: true, permissions: 'foo' },
         ],
         resource: 'products',
         record: { category: 'announcements' },
@@ -50,7 +50,7 @@ describe('resolvePermissions', () => {
         expect(match.view).toEqual('ArrayValueExactMatch');
     });
 
-    it('returns a match with mapping being a function', async () => {
+    it('returns a match with resolve being a function', async () => {
         const match = await resolvePermissions({
             ...parameters,
             permissions: 'function',
