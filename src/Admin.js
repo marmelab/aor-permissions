@@ -1,6 +1,7 @@
 import React, { Children, Component } from 'react';
 import PropTypes from 'prop-types';
 import { Admin as OriginalAdmin, Resource } from 'admin-on-rest';
+import omit from 'lodash.omit';
 import AuthProvider from './AuthProvider';
 import { AUTH_GET_PERMISSIONS } from './constants';
 import { resolvePermission as defaultResolvePermission } from './resolvePermissions';
@@ -25,6 +26,27 @@ export const defaultApplyPermissionsToAction = async ({
     return resource.props[action];
 };
 
+const permissionsProps = [
+    'permissions',
+    'exact',
+    'resolve',
+    'listPermissions',
+    'listExact',
+    'listResolve',
+    'createPermissions',
+    'createExact',
+    'createResolve',
+    'editPermissions',
+    'editExact',
+    'editResolve',
+    'showPermissions',
+    'showExact',
+    'showResolve',
+    'removePermissions',
+    'removeExact',
+    'removeResolve',
+];
+
 export const defaultApplyPermissionsToResource = async ({
     authClient,
     resource,
@@ -47,10 +69,7 @@ export const defaultApplyPermissionsToResource = async ({
     }
 
     const newResource = {
-        name: resource.props.name,
-        icon: resource.props.icon,
-        options: resource.props.options,
-        checkCredentials: resource.props.checkCredentials,
+        ...omit(resource.props, permissionsProps),
         list: await applyPermissionsToAction({ permissions, resource, action: 'list' }),
         create: await applyPermissionsToAction({ permissions, resource, action: 'create' }),
         edit: await applyPermissionsToAction({ permissions, resource, action: 'edit' }),
@@ -89,7 +108,6 @@ export default class Admin extends Component {
     render() {
         const { authClient, ...props } = this.props;
         const { resources } = this.state;
-
         if (!resources) return null;
 
         return (
