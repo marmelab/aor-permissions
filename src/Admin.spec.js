@@ -1,6 +1,9 @@
 import expect, { createSpy } from 'expect';
+import React from 'react';
+import { shallow } from 'enzyme';
+import { Resource } from 'admin-on-rest';
 
-import {
+import Admin, {
     defaultApplyPermissionsToAction,
     defaultApplyPermissionsToResource,
     applyPermissionsToResources,
@@ -93,7 +96,6 @@ describe('<Admin>', () => {
                         create: 'createComponent',
                         createPermissions: 'foo',
                         edit: 'editComponent',
-                        editPermissions: 'foo',
                         show: 'showComponent',
                         showPermissions: 'show',
                         showResolve: () => Promise.resolve(false),
@@ -111,7 +113,7 @@ describe('<Admin>', () => {
                 checkCredentials: 'doesCheckCredentials',
                 list: 'listComponent',
                 create: null,
-                edit: null,
+                edit: 'editComponent',
                 show: null,
                 remove: 'removeComponent',
             });
@@ -151,6 +153,35 @@ describe('<Admin>', () => {
                 authClient: 'authClientImpl',
                 resource: 'resource2',
             });
+        });
+    });
+
+    it('pass back all additional resources props', () => {
+        const authClient = () => Promise.resolve('user');
+        const wrapper = shallow(
+            <Admin authClient={authClient}>
+                <Resource name="posts" customProp="value1" customProp2="value2" />
+                <Resource name="comments" customProp="value3" customProp2="value4" />
+                <Resource name="users" permissions="admin" customProp="value1" customProp2="value2" />
+            </Admin>,
+        );
+
+        return new Promise(resolve => {
+            // We need a timeout here because of the asynchronous call to the authClient
+            setTimeout(() => {
+                expect(wrapper.find(Resource).length).toEqual(2);
+                const postsResource = wrapper.find(Resource).at(0);
+                expect(postsResource.prop('name')).toEqual('posts');
+                expect(postsResource.prop('customProp')).toEqual('value1');
+                expect(postsResource.prop('customProp2')).toEqual('value2');
+
+                const commentsResource = wrapper.find(Resource).at(1);
+                expect(commentsResource.prop('name')).toEqual('comments');
+                expect(commentsResource.prop('customProp')).toEqual('value3');
+                expect(commentsResource.prop('customProp2')).toEqual('value4');
+
+                resolve();
+            }, 100);
         });
     });
 });
