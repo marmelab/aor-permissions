@@ -1,5 +1,7 @@
 # aor-permissions
 
+**This project is discontinued. Its features have been merged in admin-on-rest 1.3.0. See [admin-on-rest documentation](https://marmelab.com/admin-on-rest/Authorization.html)**
+
 [![Build Status](https://travis-ci.org/marmelab/aor-permissions.svg?branch=master)](https://travis-ci.org/marmelab/aor-permissions)
 
 A component for [Admin-on-rest](https://github.com/marmelab/admin-on-rest) allowing to switch views depending on user roles.
